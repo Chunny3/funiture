@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "admin";
 $password = "a12345";
-$dbname = "my_db";
+$dbname = "furniture";
 $port = 3306;
 
 try{

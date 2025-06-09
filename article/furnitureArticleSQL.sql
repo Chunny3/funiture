@@ -1,5 +1,9 @@
 CREATE DATABASE `furniture`;
 
+USE `furniture`;
+
+DROP DATABASE `furniture`;
+
 SET FOREIGN_KEY_CHECKS = 0;
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -16,7 +20,6 @@ upload_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 published_date DATETIME DEFAULT CURRENT_TIMESTAMP,
 is_valid TINYINT NOT NULL DEFAULT 1,
 FOREIGN KEY (`article_category_id`) REFERENCES article_category(`id`),
-FOREIGN KEY (`user_id`) REFERENCES users(`id`),
 FOREIGN KEY (`article_tag_id`) REFERENCES article_tag(`id`)
 );
 
@@ -27,14 +30,11 @@ CREATE TABLE `article_category`(
 
 CREATE TABLE `article_img`(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    article_id INT NOT NULL,
-    img VARCHAR(500),
-    FOREIGN KEY(`article_id`) REFERENCES article(`id`)
+    img VARCHAR(500)
 );
 
 CREATE TABLE `article_tag`(
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  article_id INT NOT NULL,
   name VARCHAR(300)
 )
 
