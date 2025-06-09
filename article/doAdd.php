@@ -7,6 +7,8 @@ $result = [];
 // 取得標題和內容
 $title = $_POST['title'];
 $content = $_POST['content'];
+$tag = $_POST['tag'] ?? null; // 可選的標籤
+
 
 try {
   // 準備 SQL 語句，使用 ? 作為佔位符
@@ -28,4 +30,6 @@ try {
   $result["message"] = "資料庫連接失敗: " . $e->getMessage();
   echo json_encode($result);
 }
+alertGoTo("新增資料成功", "./index.php");
+  
 ?>
