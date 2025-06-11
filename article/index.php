@@ -2,7 +2,7 @@
 require_once "../connect.php";
 require_once "../utilities.php";
 
-$sql = "SELECT * FROM `article`";
+$sql = "SELECT * FROM `article` WHERE `is_valid` = 1 ORDER BY `id` DESC";
 try{
   $stmt = $pdo->prepare($sql);
   $stmt->execute();
@@ -42,7 +42,7 @@ try{
         </div>
 
         <div>
-          <a class="btn btn-primary btn-sm" href="add.html">新增</a>
+          <a class="btn btn-primary btn-sm" href="add.php">新增</a>
         </div>
         
       </div>
@@ -57,7 +57,7 @@ try{
           <div class="sn w30px text-center"><?=$index+1?></div>
           <div class="title flex-fill"><?=$row["title"]?></div>
           <div class="ctrl w110px text-end">
-            <button class="btn btn-danger btn-sm" data-id="<?=$row["id"]?>">刪除</button>
+             <a href="./doDelete.php?id=<?= $row["id"] ?>" class="btn btn-danger btn-sm">刪除</a>
             <a class="btn btn-primary btn-sm" href="update.php?id=<?=$row["id"]?>">修改</a>
           </div>
         </div>

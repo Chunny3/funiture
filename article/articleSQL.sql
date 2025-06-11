@@ -17,13 +17,18 @@ CREATE TABLE article (
     title VARCHAR(100),
     content longtext,
     article_category_id INT NOT NULL,
-    -- article_img_id INT NOT NULL,
     created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     upload_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     published_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     is_valid TINYINT NOT NULL DEFAULT 1,
     FOREIGN KEY (`article_category_id`) REFERENCES article_category (`id`)
-    -- FOREIGN KEY (`article_img_id`) REFERENCES article_img (`id`)
+);
+
+CREATE TABLE `article_img` (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    article_id INT NOT NULL,
+    img VARCHAR(500),
+    FOREIGN KEY (`article_id`) REFERENCES article (`id`)
 );
 
 CREATE TABLE `article_category` (
@@ -58,3 +63,10 @@ CREATE TABLE `levels` (
 DROP TABLE `article_tag`;
 
 SELECT * FROM article_tag;
+
+INSERT INTO `article_category`(`name`) VALUES
+('風格'),
+('有趣小知識'),
+('收納小方法'),
+('美感生活誌');
+

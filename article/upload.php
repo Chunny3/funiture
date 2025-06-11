@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json');
 
+
 if ($_FILES['upload']) {
     $target_dir = "uploads/";
 
@@ -43,8 +44,10 @@ if ($_FILES['upload']) {
         echo json_encode(['error' => '檔案沒有上傳']);
     } else {
         if (move_uploaded_file($_FILES["upload"]["tmp_name"], $target_file)) {
+           
             // 回傳圖片的 URL
             $url = $target_dir . $newFileName;
+            
             echo json_encode(['url' => $url]);
         } else {
             echo json_encode(['error' => '上傳檔案發生錯誤']);
