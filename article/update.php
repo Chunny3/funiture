@@ -1,26 +1,63 @@
-<?php 
+<?php
 require_once "../connect.php";
+
 
 $articleId = $_GET["id"];
 
+$sql = "SELECT `article`.* FROM `article` WHERE `article`.`id` = ?";
 
+$sqlCategory = "SELECT * FROM `article_category`";
 
-$sql = "SELECT * FROM `article_category`";
+$sqlCate = "SELECT 
+ `article`.`article_category_id` AS category_id,
+GROUP_CONCAT(`article_category`.`name`) AS `cateName`
+FROM `article`
+LEFT JOIN `article_category`
+ON `article`.`article_category_id` = `article_category`.`id`
+WHERE `article`.`id` = ?
+GROUP BY `article`.`id`";
+
+$sqlTag = "SELECT 
+`tag`.`name` AS `tagName`
+FROM `article`
+LEFT JOIN `article_tag`
+ON `article`.`id` = `article_tag`.`article_id`
+LEFT JOIN `tag`
+ON `article_tag`.`tag_id` = `tag`.`id`
+WHERE `article`.`id` = ?";
+
 $errorMsg = "";
 
-sqlAll = "SELECT * FROM `article` WHERE `id` =  "
+
 try {
-    $stmt = $pdo->
-        prepare($sql);
-    $stmt->execute();
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$articleId]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $stmtCateAll = $pdo->prepare($sqlCategory);
+    $stmtCateAll->execute();
+    $rowsCateAll = $stmtCateAll->fetchAll(PDO::FETCH_ASSOC);
+
+    $stmtCate = $pdo->prepare($sqlCate);
+    $stmtCate->execute([$articleId]);
+    $rowCate = $stmtCate->fetch(PDO::FETCH_ASSOC);
+
+    $stmtTag = $pdo->prepare($sqlTag);
+    $stmtTag->execute([$articleId]);
+    $rowsTag = $stmtTag->fetchAll(PDO::FETCH_ASSOC);
+
 } catch (PDOException $e) {
     // echo "錯誤: {{$e->getMessage()}}";
     // exit;
     $errorMsg = $e->getMessage();
 }
 
-
+$tagsArray = [];
+foreach($rowsTag as $rowTag){
+    if($rowTag["tagName"] !== null && $rowTag["tagName"] !== ""){
+        $tagsArray[] = $rowTag["tagName"];
+    }
+}
 
 ?>
 <!doctype html>
@@ -44,24 +81,26 @@ try {
             border-left: 10px solid #a0a599;
 
         }
-    
-      .tag{
-        margin-right: 6px;
-        background-color: #f6e8e8;
-        color: #000;
-        border-radius: 4px;
-        padding: 1px;
-        margin-bottom: 4px;
-        cursor: pointer;
-        transition: background-color 0.2s;
-        &:hover{
-          background-color:rgb(235, 96, 96);
-          color: #fff;
+
+        .tag {
+            margin-right: 6px;
+            background-color: #f6e8e8;
+            color: #000;
+            border-radius: 4px;
+            padding: 1px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+
+            &:hover {
+                background-color: rgb(235, 96, 96);
+                color: #fff;
+            }
+
+            &::before {
+                content: "#";
+            }
         }
-        &::before{
-          content: "#";
-        }
-      }
     </style>
 </head>
 
@@ -71,13 +110,13 @@ try {
             <h1 class="ms-2 mt-2">修改文章</h1>
         </div>
 
-        <action="./doAdd.php" method="post" enctype="multipart/form-data">
+        <form action="./doAdd.php" method="post" enctype="multipart/form-data">
             <div class="input-group mb-1">
                 <div class="input-group-text">標題</div>
-                <input type="text" name="title" class="form-control">
+                <input type="text" name="title" class="form-control" value="<?= $row["title"] ?>">
             </div>
             <div id="editor">
-                <p>這裡是內容</p>
+                <?= $row["content"] ?>
             </div>
             <div class="input-group mb-1 mt-2">
                 <span class="input-group-text">標籤</span>
@@ -92,18 +131,21 @@ try {
             </div>
             <div class="input-group mt-1 mb-2">
                 <span class="input-group-text">分類</span>
-                <select name="category[]" class="form-select">
-                    <option value selected disabled>請選擇分類</option>
-                    <?php foreach ($rows as $row): ?>
-                        <option value="<?= $row["id"] ?>"><?= $row["name"] ?></option>
+                <select name="category" class="form-select">
+
+                    <?php foreach ($rowsCateAll as $rowCateAll): ?>
+                        <option value="<?= $rowCateAll["id"] ?>" <?= $rowCateAll["id"] == $rowCate["category_id"] ? "selected" : "" ?> >
+                            <?= $rowCateAll["name"] ?></option>
                     <?php endforeach; ?>
+
                 </select>
             </div>
+            <input type="hidden" name="id" value="<?= $articleId ?>">
             <div class="d-flex mt-1">
                 <div class="btn btn-primary ms-auto btn-send">送出</div>
                 <a href="./index.php" class="btn btn-warning ms-1">取消</a>
             </div>
-            </form>
+        </form>
 
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
@@ -112,17 +154,18 @@ try {
     <script>
         let editorInstance;
         const btnSend = document.querySelector(".btn-send");
-        const saveURL = "./doAdd.php";
+        const saveURL = "./doUpdate.php";
         const inputTitle = document.querySelector("[name=title]")
 
+        const inputId = document.querySelector("[name=id]");
         const form = document.querySelector("form");
-        // const contentDIV = document.querySelector(".content-div");
         const tagList = document.querySelector(".tag-list");
         const tagInput = document.querySelector("input[name=tag]");
         const tagsInput = document.querySelector("input[name=tags]");
         const datalist = document.querySelector("datalist");
-        const tags = new Set();
-        const categoryInput = document.querySelector("select[name='category[]']")
+        const tags = new Set(<?= json_encode($tagsArray) ?>);
+        tags.forEach(tag=>createTag(tag));
+        const categoryInput = document.querySelector("select[name='category']")
 
 
         tagInput.addEventListener('keydown', async (e) => {
@@ -163,16 +206,7 @@ try {
             }
         })
 
-        // form.addEventListener("submit", function (event) {
-        //     event.preventDefault();
-        //     textarea.value = contentDIV.innerHTML;
 
-        //     if (title.value == "" || textarea.value == "") {
-        //         return alert("請輸入內容");
-        //     }
-
-        //     this.submit();
-        // })
         function createTag(name) {
             const span = document.createElement('span');
             span.classList.add("tag");
@@ -190,6 +224,7 @@ try {
 
         btnSend.addEventListener("click", e => {
             const formData = new FormData();
+            formData.append("id", inputId.value);
             formData.append("title", inputTitle.value);
             formData.append("content", editorInstance.getData());
             formData.append("tag", tagsInput.value);

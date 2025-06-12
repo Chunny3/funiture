@@ -1,0 +1,90 @@
+<?php
+require_once "../connect.php";
+require_once "../Utilities.php";
+header('Content-Type: application/json');
+
+
+
+$id = $_POST["id"];
+$title = $_POST["title"];
+$content = $_POST["content"];
+preg_match_all('/<img[^>]+src=["\']uploads\/([^"\']+)["\']/i', $content, $matches);
+$imgFiles = $matches[1];
+$tags = array_filter(array_map('trim', explode(',', $_POST['tag']))); // 取得標籤並去除空白
+$user_id = 1; //這個跟users資料庫相連時要記得改掉
+$category = $_POST['category'];
+
+
+
+$sql = "UPDATE `article` SET `title` = ?, `content` = ?, `article_category_id` = ?, `upload_at` = NOW() WHERE id = ?";
+$values = [$title, $content, $category, $id];
+
+$sqlImg = "SELECT `img` FROM `article_img` WHERE `article_id` = ? ";
+
+$sqlDelTag = "DELETE FROM `article_tag` WHERE `article_id` = ?";
+$sqlSearchTag = "SELECT `id` FROM `tag` WHERE `name` = ?";
+$sqlAddTag = "INSERT INTO `tag` (`name`) VALUES (?)";
+$sqlArticleTag = "INSERT INTO `article_tag` (`article_id`, `tag_id`) VALUES (?, ?)";
+
+$sqlDelImg = "DELETE FROM `article_img` WHERE `article_id` = ?";
+$sqlSearchImg = "SELECT `id` FROM `article_img` WHERE `img` = ?";
+$sqlAddImg = "INSERT INTO `article_img`(`article_id`, `img`) VALUES (?, ?)";
+
+
+try {
+    $stmtImg = $pdo->prepare($sqlImg);
+    $stmtImg->execute([$id]);
+    $rowOldImg = $stmtImg->fetch(PDO::FETCH_ASSOC);
+    if ($rowOldImg && isset($rowOldImg["img"])) {
+        $path = "./uploads/{$rowOldImg['img']}";
+        if (file_exists($path)) {
+            unlink($path);
+        }
+    }
+
+    $stmtDelTag = $pdo->prepare($sqlDelTag);
+    $stmtDelTag->execute([$id]);
+    foreach ($tags as $tag) {
+        $stmtSearchTag = $pdo->prepare($sqlSearchTag);
+        $stmtSearchTag->execute([$tag]);
+        $tagId = $stmtSearchTag->fetchColumn();
+
+        if (!$tagId) {
+            $stmtSearchTag = $pdo->prepare($sqlAddTag);
+            $stmtSearchTag->execute([$tag]);
+            $tagId = $pdo->lastInsertId();
+        }
+
+        $stmtArticleTag = $pdo->prepare($sqlArticleTag);
+        $stmtArticleTag->execute([$id, $tagId]);
+    }
+
+    $stmtDelImg = $pdo->prepare($sqlDelImg);
+    $stmtDelImg->execute([$id]);
+    foreach ($imgFiles as $imgFile) {
+        $stmtSearchImg = $pdo->prepare($sqlSearchImg);
+        $stmtSearchImg->execute([$imgFile]);
+        $imgId = $stmtSearchImg->fetchColumn();
+
+        if (!$imgId) {
+            $stmtAddImg = $pdo->prepare($sqlAddImg);
+            $stmtAddImg->execute([$id, $imgFile]);
+        }
+    }
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($values);
+
+    echo json_encode([
+        "status" => "success",
+        "message" => "更新成功"
+    ]);
+    exit;
+} catch (PDOException $e) {
+    http_response_code(500);
+    echo json_encode([
+        "status" => "error",
+        "message" => $e->getMessage()
+    ]);
+    exit;
+}

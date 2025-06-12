@@ -85,7 +85,7 @@ try {
             </div>
             <div class="input-group mt-1 mb-2">
                 <span class="input-group-text">分類</span>
-                <select name="category[]" class="form-select">
+                <select name="category" class="form-select">
                     <option value selected disabled>請選擇分類</option>
                     <?php foreach ($rows as $row): ?>
                         <option value="<?= $row["id"] ?>"><?= $row["name"] ?></option>
@@ -115,7 +115,7 @@ try {
         const tagsInput = document.querySelector("input[name=tags]");
         const datalist = document.querySelector("datalist");
         const tags = new Set();
-        const categoryInput = document.querySelector("select[name='category[]']")
+        const categoryInput = document.querySelector("select[name='category']")
 
 
         tagInput.addEventListener('keydown', async (e) => {
@@ -156,16 +156,7 @@ try {
             }
         })
 
-        // form.addEventListener("submit", function (event) {
-        //     event.preventDefault();
-        //     textarea.value = contentDIV.innerHTML;
 
-        //     if (title.value == "" || textarea.value == "") {
-        //         return alert("請輸入內容");
-        //     }
-
-        //     this.submit();
-        // })
         function createTag(name) {
             const span = document.createElement('span');
             span.classList.add("tag");

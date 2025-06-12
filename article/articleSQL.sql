@@ -1,5 +1,6 @@
 CREATE DATABASE `furniture`;
 
+select database();
 USE `furniture`;
 
 DROP DATABASE `furniture`;
@@ -24,6 +25,10 @@ CREATE TABLE article (
     FOREIGN KEY (`article_category_id`) REFERENCES article_category (`id`)
 );
 
+SELECT * FROM article;
+DESC article;
+
+SELECT * FROM article_img;
 CREATE TABLE `article_img` (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     article_id INT NOT NULL,
@@ -55,6 +60,8 @@ CREATE TABLE `article_tag` (
     FOREIGN KEY (`tag_id`) REFERENCES tag (`id`)
 );
 
+SELECT * FROM `tag`;
+
 CREATE TABLE `levels` (
     id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     name VARCHAR(20)
@@ -70,3 +77,64 @@ INSERT INTO `article_category`(`name`) VALUES
 ('收納小方法'),
 ('美感生活誌');
 
+SELECT 
+`article`.*,
+GROUP_CONCAT(`article_category`.`name`) AS `cateName`,
+GROUP_CONCAT(`tag`.`name`) AS `tagName`
+FROM `article`
+LEFT JOIN `article_category`
+ON `article`.`article_category_id` = `article_category`.`id`
+LEFT JOIN `article_tag`
+ON `article`.`id` = `article_tag`.`article_id`
+LEFT JOIN `tag`
+ON `article_tag`.`tag_id` = `tag`.`id`
+WHERE `article`.`id` = 12
+GROUP BY `article`.`id`;
+
+SELECT 
+GROUP_CONCAT(`article_category`.`name`) AS `cateName`
+FROM `article`
+LEFT JOIN `article_category`
+ON `article`.`article_category_id` = `article_category`.`id`
+WHERE `article`.`id` = 12
+GROUP BY `article`.`id`;
+
+SELECT 
+GROUP_CONCAT(`tag`.`name` SEPARATOR ',') AS `tagName`
+FROM `article`
+LEFT JOIN `article_tag`
+ON `article`.`id` = `article_tag`.`article_id`
+LEFT JOIN `tag`
+ON `article_tag`.`tag_id` = `tag`.`id`
+WHERE `article`.`id` = 12
+GROUP BY `article`.`id`;
+
+SELECT `article`.* FROM `article` WHERE `article`.`id` = 12;
+
+SELECT 
+GROUP_CONCAT(`tag`.`name`) AS `tagName`
+FROM `article`
+LEFT JOIN `article_tag`
+ON `article`.`id` = `article_tag`.`article_id`
+LEFT JOIN `tag`
+ON `article_tag`.`tag_id` = `tag`.`id`
+WHERE `article`.`id` = 12
+GROUP BY `article`.`id`;
+
+SELECT 
+ `article`.`article_category_id` AS category_id,
+GROUP_CONCAT(`article_category`.`name`) AS `cateName`
+FROM `article`
+LEFT JOIN `article_category`
+ON `article`.`article_category_id` = `article_category`.`id`
+WHERE `article`.`id` = 12
+GROUP BY `article`.`id`;
+
+SELECT 
+ `article`.`article_category_id` AS category_id,
+GROUP_CONCAT(`article_category`.`name`) AS `cateName`
+FROM `article`
+LEFT JOIN `article_category`
+ON `article`.`article_category_id` = `article_category`.`id`
+WHERE `article`.`id` = 12
+GROUP BY `article`.`id`;
