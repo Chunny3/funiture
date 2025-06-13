@@ -1,0 +1,398 @@
+/* :root {
+  --menugreen:#719a8b;
+  --bg:#fdfff8;
+  --cardhead:#a0a599;
+} */
+html,
+body {
+  height: 100%;
+}
+
+.h6,
+h6 {
+  font-size: 1.1rem;
+}
+
+.bg-menu {
+  background-color: #719a8b;
+  background-size: cover;
+}
+
+#wrapper {
+  min-height: 100vh;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+}
+
+#wrapper #content-wrapper {
+  background-color: #fdfff8;
+}
+
+#sidebar {
+  min-height: 100vh;
+  height: 100%;
+}
+
+.card-header {
+  background-color: #a0a599;
+}
+
+table.dataTable>thead>tr>th:not(.sorting_disabled),
+table.dataTable>thead>tr>td:not(.sorting_disabled) {
+  padding-right: 13px !important;
+}
+
+tbody tr:nth-of-type(odd) {
+  background-color: #f9fcf5;
+}
+
+
+.btn-del {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+  font-size: 0.95rem;
+
+  &:hover {
+    color: #cf847e;
+  }
+}
+
+.btn-view {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+  font-size: 0.92rem;
+
+  &:hover {
+    color: #6a84d2;
+  }
+}
+
+
+.a-edit {
+  color: inherit;
+  margin: 0 10px;
+  font-size: 0.95rem;
+
+  &:hover {
+    color: #82ad57;
+  }
+}
+
+
+.a-reset {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+.date-status {
+  display: inline-block;
+  padding: 0.15em 0.75em;
+  border-radius: 999px;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+.date-active {
+  background-color: #cbefdd;
+  color: #48956f;
+}
+
+.date-pending {
+  background-color: #ebebeb;
+}
+
+.date-expired {
+  background-color: #f4dbd5;
+  color: #b7705f;
+}
+
+.modal-header {
+  padding: 0;
+  padding-bottom: 10px;
+}
+
+.custom-coupon-bg {
+  background: url("../img/couponbg.png") no-repeat center center;
+  background-size: contain;
+  background-color: transparent !important;
+  /* 把白底取消 */
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  min-height: 376px;
+}
+
+.custom-modal-dialog {
+  max-width: 740px;
+  /* 圖片寬度 */
+  width: 100%;
+  margin: 0 auto;
+}
+
+.coupon-text-area {
+  max-width: 528px;
+  width: 100%;
+}
+
+.badge {
+  font-size: 87%;
+  padding: .35em .6em;
+  font-weight: 500;
+}
+
+
+.badge-green {
+  color: #fff;
+  background-color: #719a8b;
+}
+
+.badge-blue {
+  color: #fff;
+  background-color: #718bc5;
+}
+
+
+
+/* btn-outline-secondary */
+.btn-outline-secondary {
+  color: #75ab97;
+  border-color: #75ab97;
+}
+
+.btn-outline-secondary:not(:disabled):not(.disabled).active,
+.btn-outline-secondary:not(:disabled):not(.disabled):active,
+.show>.btn-outline-secondary.dropdown-toggle {
+  color: #fff;
+  background-color: #4f8c76;
+  border-color: #4f8c76;
+}
+
+.btn-check:checked+.btn-outline-secondary,
+.btn-outline-secondary.active {
+  background-color: #75ab97;
+  color: white;
+  border-color: #75ab97;
+}
+
+/* 一般 hover */
+.btn-check+.btn-outline-secondary:hover {
+  color: #4f8c76;
+  background-color: #fff;
+  border-color: #4f8c76;
+}
+
+/* 被選中時 hover → 維持選中樣式 */
+.btn-check:checked+.btn-outline-secondary:hover {
+  background-color: #75ab97;
+  color: white;
+  border-color: #75ab97;
+}
+
+
+
+
+/* btn-outline-primary */
+.btn-outline-primary {
+  color: #7593d5;
+  border-color: #7593d5;
+}
+
+.btn-outline-primary:not(:disabled):not(.disabled).active,
+.btn-outline-primary:not(:disabled):not(.disabled):active,
+.show>.btn-outline-primary.dropdown-toggle {
+  color: #fff;
+  background-color: #5b7abd;
+  border-color: #5b7abd;
+}
+
+.btn-check:checked+.btn-outline-primary,
+.btn-outline-primary.active {
+  background-color: #7593d5;
+  color: white;
+  border-color: #7593d5;
+}
+
+/* 一般 hover */
+.btn-check+.btn-outline-primary:hover {
+  color: #5b7abd;
+  background-color: #fff;
+  border-color: #5b7abd;
+}
+
+/* 被選中時 hover → 維持選中樣式 */
+.btn-check:checked+.btn-outline-primary:hover {
+  background-color: #7593d5;
+  color: white;
+  border-color: #7593d5;
+}
+
+
+
+
+
+/* btn-outline-success */
+.btn-outline-success {
+  color: #6a7c5d;
+  border-color: #6a7c5d;
+  background-color: #fdfff8;
+
+  &:hover {
+    color: #556947;
+    border-color: #556947;
+    background-color: #fdfff8;
+  }
+}
+
+.btn-outline-success:not(:disabled):not(.disabled).active,
+.btn-outline-success:not(:disabled):not(.disabled):active,
+.show>.btn-outline-success.dropdown-toggle {
+  color: #fff;
+  background-color: #949d8d;
+  border-color: #949d8d;
+}
+
+.btn-outline-success:not(:disabled):not(.disabled).active:focus,
+.btn-outline-success:not(:disabled):not(.disabled):active:focus,
+.show>.btn-outline-success.dropdown-toggle:focus {
+  box-shadow: none;
+}
+
+.btn-outline-success.focus,
+.btn-outline-success:focus {
+  box-shadow: none;
+}
+
+
+/* btn-secondary */
+.btn-secondary {
+  color: #fdfff8;
+  border-color: #949d8d;
+  background-color: #949d8d;
+
+  &:hover {
+    color: #fdfff8;
+    border-color: #828f79;
+    background-color: #828f79;
+  }
+}
+
+.btn-secondary:not(:disabled):not(.disabled).active,
+.btn-secondary:not(:disabled):not(.disabled):active,
+.show>.btn-secondary.dropdown-toggle {
+  color: #fdfff8;
+  background-color: #828f79;
+  border-color: #828f79;
+}
+
+.btn-secondary.focus,
+.btn-secondary:focus {
+  color: #fff;
+  background-color: #949d8d;
+  border-color: #949d8d;
+}
+
+
+.btn-secondary:not(:disabled):not(.disabled).active:focus,
+.btn-secondary:not(:disabled):not(.disabled):active:focus,
+.show>.btn-secondary.dropdown-toggle:focus {
+  box-shadow: none;
+}
+
+.btn-secondary.focus,
+.btn-secondary:focus {
+  box-shadow: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.page-item.active .page-link {
+  z-index: 3;
+  color: #fff;
+  background-color: #6f9b8c;
+  border-color: #6f9b8c;
+}
+
+.page-link {
+  color: #6f9b8c;
+}
+
+.max-width1200 {
+  max-width: 1200px;
+}
+
+.max-width800 {
+  max-width: 800px;
+}
+
+.col-1 {
+  width: 80px;
+}
+
+.col-2 {
+  width: 240px;
+}
+
+.col-3 {
+  width: 140px;
+}
+
+.col-4 {
+  width: 120px;
+}
+
+.col-5 {
+  width: 120px;
+}
+
+.col-6 {
+  width: 120px;
+}
+
+.col-7 {
+  width: 110px;
+}
+
+.col-8 {
+  width: 250px;
+}
+
+.col-9 {
+  width: 100px;
+}
+
+.w-150 {
+  width: 150px;
+}
+
+.w-250 {
+  width: 250px;
+}
+
+.gap-8 {
+  gap: 8px;
+}
+
+.gap-12 {
+  gap: 12px;
+}
