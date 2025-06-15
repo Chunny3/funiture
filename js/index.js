@@ -16,10 +16,10 @@ btnSearch.addEventListener("click", function () {
     if (queryType == "createTime") {
         const date1 = inputDate1.value;
         const date2 = inputDate2.value;
-        window.location.href = `./pageMsgsList.php?date1=${date1}&date2=${date2}&qType=${queryType}`;
+        window.location.href = `./index.php?date1=${date1}&date2=${date2}&qType=${queryType}`;
     } else {
         const query = inputText.value;
-        window.location.href = `./pageMsgsList.php?search=${query}&qType=${queryType}`;
+        window.location.href = `./index.php?search=${query}&qType=${queryType}`;
     }
 
 
