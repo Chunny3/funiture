@@ -99,6 +99,7 @@ foreach ($rowsTag as $rowTag) {
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <input type="hidden" name="id" value="<?= $row["id"] ?>">
 
 
                     <!-- Basic Card Example -->

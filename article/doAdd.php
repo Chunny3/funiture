@@ -6,11 +6,13 @@ header('Content-Type: application/json');
 
 $title = $_POST['title'];
 $content = $_POST['content'];
+
 preg_match_all('/<img[^>]+src=["\']uploads\/([^"\']+)["\']/i', $content, $matches);
 $imgFiles = $matches[1]; // 這是所有 uploads/ 後面的檔名陣列
 $tags = array_filter(array_map('trim', explode(',', $_POST['tag']))); // 取得標籤並去除空白
 $user_id = 1; //這個跟users資料庫相連時要記得改掉ㄋ
 $category = $_POST['category'];
+
 
 
 

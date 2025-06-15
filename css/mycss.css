@@ -123,16 +123,7 @@ tbody tr:nth-of-type(odd) {
   padding-bottom: 10px;
 }
 
-.custom-coupon-bg {
-  background: url("../img/couponbg.png") no-repeat center center;
-  background-size: contain;
-  background-color: transparent !important;
-  /* 把白底取消 */
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-  min-height: 376px;
-}
+
 
 .custom-modal-dialog {
   max-width: 740px;
@@ -141,10 +132,7 @@ tbody tr:nth-of-type(odd) {
   margin: 0 auto;
 }
 
-.coupon-text-area {
-  max-width: 528px;
-  width: 100%;
-}
+
 
 .badge {
   font-size: 87%;

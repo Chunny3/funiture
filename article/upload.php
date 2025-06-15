@@ -25,9 +25,9 @@ if ($_FILES['upload']) {
     }
 
     // 檢查檔案大小 (例如：1000KB)
-    if ($_FILES["upload"]["size"] > 1000000) {
+    if ($_FILES["upload"]["size"] > 10000000) {
         $uploadOk = 0;
-        echo json_encode(['error' => '檔案超過1000k']);
+        echo json_encode(['error' => '檔案超過10000k']);
         exit();
     }
 
@@ -44,12 +44,14 @@ if ($_FILES['upload']) {
         echo json_encode(['error' => '檔案沒有上傳']);
     } else {
         if (move_uploaded_file($_FILES["upload"]["tmp_name"], $target_file)) {
-           
+            error_log("move_uploaded_file 成功: " . $target_file);
+
             // 回傳圖片的 URL
             $url = $target_dir . $newFileName;
-            
+
             echo json_encode(['url' => $url]);
         } else {
+            error_log("move_uploaded_file 失敗: " . $_FILES["upload"]["tmp_name"] . " -> " . $target_file);
             echo json_encode(['error' => '上傳檔案發生錯誤']);
         }
     }

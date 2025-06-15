@@ -31,16 +31,14 @@ $sqlSearchImg = "SELECT `id` FROM `article_img` WHERE `img` = ?";
 $sqlAddImg = "INSERT INTO `article_img`(`article_id`, `img`) VALUES (?, ?)";
 
 
+
+
 try {
     $stmtImg = $pdo->prepare($sqlImg);
     $stmtImg->execute([$id]);
     $rowOldImg = $stmtImg->fetch(PDO::FETCH_ASSOC);
-    if ($rowOldImg && isset($rowOldImg["img"])) {
-        $path = "./uploads/{$rowOldImg['img']}";
-        if (file_exists($path)) {
-            unlink($path);
-        }
-    }
+    preg_match_all('/<img[^>]+src=["\']uploads\/([^"\']+)["\']/i', $content, $matches);
+    $newImgs = $matches[1];
 
     $stmtDelTag = $pdo->prepare($sqlDelTag);
     $stmtDelTag->execute([$id]);
@@ -59,17 +57,38 @@ try {
         $stmtArticleTag->execute([$id, $tagId]);
     }
 
-    $stmtDelImg = $pdo->prepare($sqlDelImg);
-    $stmtDelImg->execute([$id]);
-    foreach ($imgFiles as $imgFile) {
-        $stmtSearchImg = $pdo->prepare($sqlSearchImg);
-        $stmtSearchImg->execute([$imgFile]);
-        $imgId = $stmtSearchImg->fetchColumn();
+    // $stmtDelImg = $pdo->prepare($sqlDelImg);
+    // $stmtDelImg->execute([$id]);
+    // foreach ($imgFiles as $imgFile) {
+    //     $stmtSearchImg = $pdo->prepare($sqlSearchImg);
+    //     $stmtSearchImg->execute([$imgFile]);
+    //     $imgId = $stmtSearchImg->fetchColumn();
 
-        if (!$imgId) {
-            $stmtAddImg = $pdo->prepare($sqlAddImg);
-            $stmtAddImg->execute([$id, $imgFile]);
-        }
+    //     if (!$imgId) {
+    //         $stmtAddImg = $pdo->prepare($sqlAddImg);
+    //         $stmtAddImg->execute([$id, $imgFile]);
+    //     }
+    // }
+
+    if (!is_array($rowOldImg))
+        $rowOldImg = [];
+    if (!is_array($newImgs))
+        $newImgs = [];
+
+    $imgsToDelete = array_diff($rowOldImg, $newImgs);
+    foreach ($imgsToDelete as $img) {
+        // 刪除資料庫紀錄
+        $stmtDel = $pdo->prepare("DELETE FROM article_img WHERE article_id = ? AND img = ?");
+        $stmtDel->execute([$id, $img]);
+        // 刪除檔案
+        $path = __DIR__ . "/uploads/$img";
+        if (file_exists($path))
+            unlink($path);
+    }
+    $imgsToAdd = array_diff($newImgs, $rowOldImg);
+    foreach ($imgsToAdd as $img) {
+        $stmtAdd = $pdo->prepare("INSERT INTO article_img (article_id, img) VALUES (?, ?)");
+        $stmtAdd->execute([$id, $img]);
     }
 
     $stmt = $pdo->prepare($sql);

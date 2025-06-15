@@ -78,18 +78,28 @@ btnSend.addEventListener("click", e => {
     fetch(saveURL, {
         method: "POST",
         body: formData
-    }).then(res => res.text())
+    })
+        .then(res => res.text())
         .then(text => {
-            console.log(text); // 觀察實際回傳
-            return JSON.parse(text);
-        })
-        .then(result => {
+            console.log("伺服器回應：", text);
+
+            let result;
+            try {
+                result = JSON.parse(text);
+            } catch (e) {
+                // JSON 格式錯誤，可能是 PHP 錯誤頁
+                console.error("無法解析為 JSON：", e);
+                throw new Error("後端錯誤，請開發人員檢查 Console 詳細內容");
+            }
+
             if (result.status === "success") {
                 window.location.href = "./index.php";
             } else {
                 throw new Error(result.message);
             }
-        }).catch(error => {
+
+        })
+        .catch(error => {
             console.log(error);
             alert(error.message)
         });
