@@ -74,7 +74,8 @@ LEFT JOIN `tag`
 ON `tag`.`id` = `article_tag`.`tag_id`
 LEFT JOIN `article_category`
 ON `article`.`article_category_id` = `article_category`.`id`
-WHERE is_valid = 1
+<！-- 改這下面 -->
+WHERE $searchSQL $dateSQL (`created_date` IS NULL OR `created_date` < NOW()) AND is_valid = 1
 GROUP BY `article`.`id`
 $sortSQL
 LIMIT $perPage OFFSET $pageStart";
