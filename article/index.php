@@ -195,8 +195,7 @@ $totalPage = ceil($length / $perPage);
 
                             <!-- 搜尋 -->
                             <form class="input-group w-250 ml-4 d-flex">
-                                <input name="searchType" id="searchType3" type="radio" class="form-check-input"
-                            value="createTime" placeholder="搜尋文章名稱">
+                              <input name="search" type="text" class="form-control form-control-sm" placeholder="搜尋">
                                 <input id="search-input" name="search" type="text" class="form-control form-control-sm"
                                     placeholder="搜尋文章名稱">
                                 <button id="search-btn" type="button" class="btn btn-sm btn-search"><i
