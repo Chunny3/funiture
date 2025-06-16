@@ -1,5 +1,5 @@
 <?php
-require_once "./connect.php";
+require_once "../connect.php";
 require_once "./Utilities.php";
 
 if (!isset($_GET["id"])) {
@@ -63,32 +63,8 @@ try {
 
     <!-- Custom styles for this template -->
     <link href="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin-2@4.1.4/css/sb-admin-2.min.css" rel="stylesheet">
-
+    <link href="../css/mycss.css" rel="stylesheet">
     <style>
-        .sidebar {
-            background-color: rgb(113, 154, 139) !important;
-        }
-
-        .sidebar .nav-item .nav-link {
-            color: #fff !important;
-        }
-
-        .sidebar .sidebar-brand {
-            color: #fff !important;
-        }
-
-        .sidebar .sidebar-heading {
-            color: #fff !important;
-        }
-
-        .sidebar .sidebar-divider {
-            border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
-        }
-
-        .sidebar-brand-text {
-            color: rgb(113, 154, 139) !important;
-        }
-
         .btn-dark {
             background-color: #a0a599 !important;
             border-color: #a0a599 !important;
@@ -183,56 +159,10 @@ try {
 <body id="page-top">
 
     <!-- Page Wrapper -->
-    <div id="wrapper">
-
-        <!-- Sidebar -->
-        <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">商品管理系統</div>
-            </a>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item">
-                <a class="nav-link" href="index.html">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>儀表板</span>
-                </a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                商品管理
-            </div>
-
-            <!-- Nav Item - Tables -->
-            <li class="nav-item active">
-                <a class="nav-link" href="productlist.php">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>商品列表</span>
-                </a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-
-        </ul>
-        <!-- End of Sidebar -->
+    <div id="wrapper" class="d-flex min-vh-100">
+        <div id="sidebar" class="bg-light" style="min-width:220px; min-height:100vh; height:100%;">
+            <?php include "../index/sideBar.php"; ?>
+        </div>
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -385,7 +315,8 @@ try {
                                             <?php foreach ($rowsCate as $rowCat): ?>
                                                 <option value="<?= $rowCat["category_id"] ?>"
                                                     <?= ($row["category_id"] == $rowCat["category_id"]) ? "selected" : "" ?>>
-                                                    <?= $rowCat["category_name"] ?></option>
+                                                    <?= $rowCat["category_name"] ?>
+                                                </option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>

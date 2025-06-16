@@ -30,6 +30,9 @@ try {
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        referrerpolicy="no-referrer" />
+
     <link href="../css/sb-admin-2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/mycss.css">
@@ -42,7 +45,7 @@ try {
     <!-- Page Wrapper -->
     <div id="wrapper" class="d-flex min-vh-100">
         <div id="sidebar" class="bg-light" style="min-width:220px; min-height:100vh; height:100%;">
-            <?php include "../index/sideBar.html"; ?>
+            <?php include "../index/sideBar.php"; ?>
         </div>
 
         <!-- Content Wrapper -->
@@ -61,7 +64,7 @@ try {
                     <div class="card shadow max-width1200 mx-auto">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-white">新增文章表單</h6>
-                            
+
                         </div>
                         <form action="./doAdd.php" method="post" enctype="multipart/form-data">
                             <div class="container mt-3 max-width800">

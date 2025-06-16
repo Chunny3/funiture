@@ -1,46 +1,43 @@
 <?php
 require_once "../connect.php";
 require_once "../utilities.php";
+$current_page = basename($_SERVER['PHP_SELF']);
 
 $cid = intval($_GET["cid"] ?? 0);
+$values = [];
+$where = "WHERE article.is_valid = 1";
 
-if ($cid == 0) {
-    $cateSQL = "";
-    $values = [];
-} else {
-    $cateSQL = "`category_id` = :cid AND";
-    $values = ["cid" => $cid];
+if ($cid > 0) {
+    $where .= " AND article.category_id = :cid";
+    $values["cid"] = $cid;
 }
 
-$search = $_GET["search"] ?? "";
-$searchType = $_GET["qType"] ?? "";
-if ($search == "") {
-    $searchSQL = "";
+$map = [
+    "createTime" => "created_date",
+    "title" => "title"
+];
 
-} else {
-    $searchSQL = "`$searchType` LIKE :search AND";
+$qTypeKey = $_GET["searchType"] ?? "createTime";
+$qType = $map[$qTypeKey] ?? "created_date";
+
+$start_date = trim($_GET['start_date'] ?? '');
+$end_date = trim($_GET['end_date'] ?? '');
+if ($start_date !== '') {
+    $where .= " AND article.created_date >= :start_date";
+    $values["start_date"] = "$start_date 00:00:00";
+}
+if ($end_date !== '') {
+    $where .= " AND article.created_date <= :end_date";
+    $values["end_date"] = "$end_date 23:59:59";
+}
+
+// 關鍵字搜尋（只在選擇標題時生效）
+$search = trim($_GET["search"] ?? "");
+$searchType = $_GET["searchType"] ?? "title";
+if ($search !== "" && $searchType === "title") {
+    $where .= " AND article.title LIKE :search ";
     $values["search"] = "%$search%";
 }
-
-$date1 = $_GET["date1"] ?? "";
-$date2 = $_GET["date2"] ?? "";
-$dateSQL = "";
-if ($searchType == "createTime") {
-    if ($date1 != "" && $date2 != "") {
-        $startDateTime = "{$date1} 00:00:00";
-        $endDateTime = "{$date2} 23:59:59";
-    } else if ($date1 == "" && $date2 != "") {
-        $startDateTime = "{$date2} 00:00:00";
-        $endDateTime = "{$date2} 23:59:59";
-    } else if ($date2 == "" && $date1 != "") {
-        $startDateTime = "{$date1} 00:00:00";
-        $endDateTime = "{$date1} 23:59:59";
-    }
-    $dateSQL = "(`created_date` BETWEEN :startDateTime AND :endDateTime) AND ";
-    $values["startDateTime"] = $startDateTime;
-    $values["endDateTime"] = $endDateTime;
-}
-
 
 $perPage = 10;
 $page = intval($_GET["page"] ?? 1);
@@ -48,34 +45,40 @@ $pageStart = ($page - 1) * $perPage;
 
 $order = $_GET["order"] ?? "desc";
 $sortBy = $_GET["sortBy"] ?? "";
-$sortSQL = "ORDER BY `categoryName` DESC";
-if ($sortBy == "categoryName") {
-    $order = strtolower($order) === "asc" ? "ASC" : "DESC";
-    $sortSQL = "ORDER BY `categoryName` $order";
-
-} else if ($sortBy == "") {
-    $sortSQL = "ORDER BY `article`.`id` ASC";
+$order = strtolower($order) === "asc" ? "ASC" : "DESC";
+if ($sortBy === "") {
+    $sortSQL = "ORDER BY article.id DESC";
+} else if ($sortBy === "categoryName") {
+    $sortSQL = "ORDER BY categoryName $order";
+} else {
+    $sortSQL = "ORDER BY article.id ASC";
 }
-;
 
-// $sql = "SELECT * FROM `article` WHERE $cateSQL $searchSQL $dateSQL (`created_date` IS NULL OR `created_date` < NOW()) AND is_valid = 1 LIMIT $perPage OFFSET $pageStart";
-$sqlAll = "SELECT * FROM `article` WHERE $cateSQL $searchSQL $dateSQL (`created_date` IS NULL OR `created_date` < NOW()) AND is_valid = 1";
+
 $sqlCate = "SELECT * FROM `article_category`";
-
-
+// $sqlAll = "SELECT * FROM `article` WHERE  `is_valid` = 1";
+$sqlAll = "
+SELECT COUNT(DISTINCT article.id)
+FROM article
+LEFT JOIN article_tag ON article.id = article_tag.article_id
+LEFT JOIN tag ON tag.id = article_tag.tag_id
+LEFT JOIN article_category ON article.article_category_id = article_category.id
+$where
+";
 $sql = "SELECT 
 article.*,
+MAX(article.created_date) AS created_date,
 GROUP_CONCAT(DISTINCT article_category.name) AS categoryName,
 GROUP_CONCAT(tag.name) AS tagName
-FROM `article` 
+FROM `article`
 LEFT JOIN `article_tag`
 ON `article`.`id` = `article_tag`.`article_id`
 LEFT JOIN `tag`
 ON `tag`.`id` = `article_tag`.`tag_id`
 LEFT JOIN `article_category`
 ON `article`.`article_category_id` = `article_category`.`id`
-<！-- 改這下面 -->
-WHERE $searchSQL $dateSQL (`created_date` IS NULL OR `created_date` < NOW()) AND is_valid = 1
+-- 改這下面
+$where
 GROUP BY `article`.`id`
 $sortSQL
 LIMIT $perPage OFFSET $pageStart";
@@ -84,13 +87,26 @@ LIMIT $perPage OFFSET $pageStart";
 
 try {
 
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute($values);
+    // $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // $stmtAll = $pdo->prepare($sqlAll);
+    // $stmtAll->execute($values);
+    // $length = $stmtAll->fetchColumn();
     $stmt = $pdo->prepare($sql);
+    foreach ($values as $key => $val) {
+        $stmt->bindValue(":" . $key, $val);
+    }
     $stmt->execute();
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $stmtAll = $pdo->prepare($sqlAll);
-    $stmtAll->execute($values);
-    $length = $stmtAll->rowCount();
+    foreach ($values as $key => $val) {
+        $stmtAll->bindValue(":" . $key, $val);
+    }
+    $stmtAll->execute();
+    $length = $stmtAll->fetchColumn();
 
 } catch (PDOException $e) {
     echo "系統錯誤，請恰管理人員<br>";
@@ -101,6 +117,7 @@ try {
 $totalPage = ceil($length / $perPage);
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -108,7 +125,6 @@ $totalPage = ceil($length / $perPage);
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
     <title>文章管理</title>
 
 
@@ -126,8 +142,8 @@ $totalPage = ceil($length / $perPage);
     <!-- Custom styles for this page -->
     <link href="../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
-    <link href="../css/mycss.css" rel="stylesheet">
     <link href="../css/article.css" rel="stylesheet">
+    <link href="../css/mycss.css" rel="stylesheet">
 
 
 </head>
@@ -137,7 +153,7 @@ $totalPage = ceil($length / $perPage);
     <!-- Page Wrapper -->
     <div id="wrapper" class="d-flex min-vh-100">
         <div id="sidebar" class="bg-light" style="min-width:220px; min-height:100vh; height:100%;">
-            <?php include "../index/sideBar.html"; ?>
+            <?php include "../index/sideBar.php"; ?>
         </div>
 
         <!-- Content Wrapper -->
@@ -159,49 +175,33 @@ $totalPage = ceil($length / $perPage);
                                     class="fa-solid fa-plus"></i></a>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center mb-3 justify-content-between flex-wrap">
-                        <div class="d-flex gap-12 ml-3">
-                            <a href="./index.php" class="btn btn-secondary btn-sm">清除篩選&nbsp;&nbsp;<i
-                                    class="fa-solid fa-rotate"></i></a>
-                            <!-- <div class="btn-group">
-                                <button class="btn btn-outline-success btn-sm dropdown-toggle" type="button"
-                                    data-bs-toggle="dropdown">
-                                    全部商品類別
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+
+                        <a href="./index.php" class="btn btn-secondary btn-sm">清除篩選&nbsp;&nbsp;<i
+                                class="fa-solid fa-rotate"></i></a>
+
+                        <div class="d-flex align-items-center gap-3 flex-wrap">
+                            <!-- 時間篩選區塊 -->
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <span class="fw-bold">時間：</span>
+                                <input type="date" name="start_date" class="form-control form-control-sm w-auto"
+                                    style="min-width: 140px;" value="<?= htmlspecialchars($start_date) ?>">
+                                <span class="text-muted mr-2 ml-2">至</span>
+                                <input type="date" name="end_date" class="form-control form-control-sm w-auto"
+                                    style="min-width: 140px;" value="<?= htmlspecialchars($end_date) ?>">
+                            </div>
+
+                            <!-- 搜尋欄位 -->
+                            <form class="input-group w-auto ml-3">
+                                <input type="hidden" id="searchType" name="searchType" value="title">
+                                <input name="search" type="text" class="form-control form-control-sm"
+                                    placeholder="搜尋文章標題">
+                                <button id="search-btn" type="button" class="btn btn-sm btn-search">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
                                 </button>
-                                <div class="dropdown-menu">
-                                    <button class="dropdown-item" type="button">全部類別</button>
-                                </div>
-                            </div> -->
-
-                        </div>
-
-                        <div class="d-flex gap-8 mr-3 align-items-center">
-                            <!-- <div class="btn-group">
-                                <button class="btn btn-outline-success btn-sm dropdown-toggle" type="button"
-                                    data-bs-toggle="dropdown">
-                                    日期狀態選擇
-                                </button>
-                                <ul class="dropdown-menu" id="category-dropdown">
-                                    <li><button type="button" class="dropdown-item" data-value="">全部類別</button></li>
-                                </ul>
-                            </div> -->
-                            <!-- 搜尋日期 -->
-                            <span>有效日期範圍</span>
-                            <input id="input-date1" name="date1" type="date"
-                                class=" form-control input-date form-control-sm w-150">
-                            <span> ~ </span>
-                            <input id="input-date2" name="date2" type="date"
-                                class="form-control input-date form-control-sm w-150">
-
-                            <!-- 搜尋 -->
-                            <form class="input-group w-250 ml-4 d-flex">
-                              <input name="search" type="text" class="form-control form-control-sm" placeholder="搜尋">
-                                <input id="search-input" name="search" type="text" class="form-control form-control-sm"
-                                    placeholder="搜尋文章名稱">
-                                <button id="search-btn" type="button" class="btn btn-sm btn-search"><i
-                                        class="fa-solid fa-magnifying-glass"></i></button>
                             </form>
                         </div>
+
 
                     </div>
                     <div class="alert my-alert-bg" role="alert">
@@ -254,12 +254,13 @@ $totalPage = ceil($length / $perPage);
                                                 <td><?= $row["tagName"] ?></td>
                                                 <td>
                                                     <!-- <span class='date-status date-pending'>未發佈</span><br> -->
-                                                    <?= $row["created_date"] ?></td>
+                                                    <?= $row["created_date"] ?>
+                                                </td>
                                                 <td>
-                                                    <button type="button" class="btn-view" data-toggle="modal"
+                                                    <!-- <button type="button" class="btn-view" data-toggle="modal"
                                                         data-target="#viewModal123">
                                                         <i class="fa-solid fa-eye"></i>
-                                                    </button>
+                                                    </button> -->
                                                     <a class="btn btn-sm" href="update.php?id=<?= $row["id"] ?>"><i
                                                             class="fa-solid fa-pencil"></i></a>
                                                     <a href="./doDelete.php?id=<?= $row["id"] ?>" class="btn btn-sm"><i
@@ -284,23 +285,18 @@ $totalPage = ceil($length / $perPage);
                                             $link = "./index.php?page={$i}";
                                             if ($cid > 0)
                                                 $link .= "&cid={$cid}";
-                                            if ($searchType != "")
-                                                $link .= "&search={$search}&qType={$searchType}";
-                                            if ($date1 != "")
-                                                $link .= "&date1={$date1}";
-                                            if ($date2 != "")
-                                                $link .= "&date2={$date2}";
+                                            // if ($searchType != "")
+                                            //     $link .= "&search={$search}&qType={$searchType}";
+                                            if ($start_date != "")
+                                                $link .= "&date1={$start_date}";
+                                            if ($end_date != "")
+                                                $link .= "&date2={$end_date}";
                                             ?>
                                             <a class="page-link" href="<?= $link ?>"><?= $i ?></a>
                                         </li>
                                     <?php endfor; ?>
                                 </ul>
-                                <div>
-                                    <button class="btn btn-info ml-auto">
-                                        <i class="fa-solid fa-trash"></i>
-                                        垃圾桶
-                                    </button>
-                                </div>
+
                             </div>
                         </div>
 

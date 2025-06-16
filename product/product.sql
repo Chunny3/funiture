@@ -2,6 +2,9 @@ CREATE DATABASE product;
 
 USE `product`;
 
+DROP TABLE USERS;
+DROP TABLE Products;
+
 CREATE TABLE `users` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
     `name` VARCHAR(30),
@@ -23,6 +26,7 @@ CREATE TABLE `products_category` (
     `category_id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `category_name` VARCHAR(30)
 );
+SHOW CREATE TABLE products;
 
 INSERT INTO
     products_category (category_name)

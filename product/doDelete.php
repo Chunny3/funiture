@@ -1,6 +1,6 @@
 <?php
 // 刪除會員主要程式
-require_once "./connect.php";
+require_once "../connect.php";
 require_once "./Utilities.php";
 
 if(!isset($_GET["id"])){

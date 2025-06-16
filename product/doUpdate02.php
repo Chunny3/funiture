@@ -1,6 +1,6 @@
 <?php
 
-require_once "./connect.php";
+require_once "../connect.php";
 require_once "./Utilities.php";
 
 if(!isset($_POST["msgID"]) ){

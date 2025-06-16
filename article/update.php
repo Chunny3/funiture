@@ -1,6 +1,6 @@
 <?php
 require_once "../connect.php";
-
+$current_page = basename($_SERVER['PHP_SELF']);
 
 $articleId = $_GET["id"];
 
@@ -70,6 +70,8 @@ foreach ($rowsTag as $rowTag) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.0/classic/ckeditor.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
+
     <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -86,7 +88,7 @@ foreach ($rowsTag as $rowTag) {
     <!-- Page Wrapper -->
     <div id="wrapper" class="d-flex min-vh-100">
         <div id="sidebar" class="bg-light" style="min-width:220px; min-height:100vh; height:100%;">
-            <?php include "../index/sideBar.html"; ?>
+            <?php include "../index/sideBar.php"; ?>
         </div>
 
         <!-- Content Wrapper -->
@@ -182,15 +184,15 @@ foreach ($rowsTag as $rowTag) {
         const tags = new Set(<?= json_encode($tagsArray) ?>);
 
     </script>
-    <script src="../js/articleUpdate.js"></script>
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
+    
     <!-- Core plugin JavaScript-->
     <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
-
+    
     <!-- Custom scripts for all pages-->
     <script src="../js/sb-admin-2.min.js"></script>
+    <script src="../js/articleUpdate.js"></script>
 
 </body>
 
