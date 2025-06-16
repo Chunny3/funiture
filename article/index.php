@@ -36,7 +36,7 @@ if ($searchType == "createTime") {
         $startDateTime = "{$date1} 00:00:00";
         $endDateTime = "{$date1} 23:59:59";
     }
-    $dateSQL = "(`createTime` BETWEEN :startDateTime AND :endDateTime) AND ";
+    $dateSQL = "(`created_date` BETWEEN :startDateTime AND :endDateTime) AND ";
     $values["startDateTime"] = $startDateTime;
     $values["endDateTime"] = $endDateTime;
 }
