@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../startbootstrap-sb-admin-2-gh-pages"
+		}
+	],
+	"settings": {
+		"liveServer.settings.port": 5501
+	}
+}
