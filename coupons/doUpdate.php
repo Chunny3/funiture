@@ -1,6 +1,6 @@
 <?php
 require_once "../connect.php";
-require_once "./utilities.php";
+require_once "./utilitiesCoupon.php";
 
 if (!isset($_POST["member-levels"])) {
   alertAndBack("請勾選會員限制");

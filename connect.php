@@ -1,9 +1,9 @@
 <?php
 $servername = "localhost";
-$username = "admin";
-// $username = "root";
-$password = "a12345";
-// $password = "1234";
+// $username = "admin";
+$username = "root";
+// $password = "a12345";
+$password = "1234";
 $dbname = "furniture";
 $port = 3306;
 

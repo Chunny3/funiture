@@ -29,7 +29,7 @@ h6 {
 /* new */
 .bg-menu {
   background-color: #719a8b;
-  background-image: url(../../img/bar-bg.jpg);
+  background-image: url(../index/img/bar-bg.jpg);
   background-position: calc(100%) calc(100% + 10px);
   background-repeat: no-repeat;
   mix-blend-mode: multiply;
