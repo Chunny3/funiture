@@ -10,17 +10,17 @@ function alertAndBack($msg=""){
 function alertGoBack($msg=""){
   echo "<script>
     alert('$msg');
-    window.location = './pageMsgsList.php';
+    window.location = './index.php';
   </script>";
 }
 
-function alertGoTo($msg="", $url="./pageMsgsList.php"){
+function alertGoTo($msg="", $url="./index.php"){
   echo "<script>
     alert('$msg');
     window.location = '$url';
   </script>";
 }
-function alertGoNext($url="./pageMsgsList.php"){
+function alertGoNext($url="./index.php"){
   echo "<script>
     window.location = '$url';
   </script>";
@@ -29,7 +29,7 @@ function alertGoNext($url="./pageMsgsList.php"){
 // 有預設值的參數要往最後放
 function timeoutGoBack($time=1000){
   echo "<script>
-    setTimeout(()=>window.location = './pageMsgsList.php', $time);
+    setTimeout(()=>window.location = './index.php', $time);
   </script>";
 }
 

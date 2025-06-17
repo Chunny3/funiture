@@ -84,7 +84,7 @@ btnSend.addEventListener("click", e => {
         })
         .then(result => {
             if (result.status === "success") {
-                window.location.href = "./index.php";
+                window.location.href = "./articleList.php";
             } else {
                 throw new Error(result.message);
             }

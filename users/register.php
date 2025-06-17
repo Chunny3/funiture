@@ -54,7 +54,7 @@
       <!-- 左側圖片 -->
       <div class="col-lg-6 text-center mb-4 mb-lg-0 d-flex align-items-center justify-content-center"
         style="height: 100vh;">
-        <img src="../img/login.jpg" alt="登入圖片" class="img-fluid" style="height: 100vh; width: 100%; object-fit: cover;">
+        <img src="../index/img/login.jpg" alt="登入圖片" class="img-fluid" style="height: 100vh; width: 100%; object-fit: cover;">
       </div>
       <!-- 右側註冊表單 -->
       <div class="col-lg-6">
@@ -598,7 +598,7 @@
       if (file) {
         document.getElementById('imgPreview').src = URL.createObjectURL(file);
       } else {
-        document.getElementById('imgPreview').src = '../uploads/no-image.jpg';
+        document.getElementById('imgPreview').src = './uploads/no-image.jpg';
       }
     });
   </script>

@@ -13,7 +13,7 @@ btnSearch.addEventListener("click", function () {
     const date2 = inputDate2.value;
     const keyword = inputText.value.trim();
 
- const sUrl = new URL("../article/index.php", window.location.origin);
+ const sUrl = new URL("../article/articleList.php", window.location.origin);
 
 // 判斷是否有輸入關鍵字
 if (keyword !== "") {

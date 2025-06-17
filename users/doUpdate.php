@@ -88,4 +88,4 @@ try {
   exit;
 }
 
-alertGoTo("修改資料成功", "./update.php?id={$id}");
+alertGoTo("修改資料成功", "./index.php");

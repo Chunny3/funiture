@@ -1,9 +1,9 @@
 <?php
-// session_start();
-// if(!isset($_SESSION["user"])){
-//   header("location: /users/login.php");
-//   exit;
-// }
+session_start();
+if(!isset($_SESSION["user"])){
+  header("location: /users/login.php");
+  exit;
+}
 
 require_once "../connect.php";
 $current_page = basename($_SERVER['PHP_SELF']);
@@ -95,6 +95,7 @@ $endItem = min($page * $perPage, $msgLength);
 // 改結束
 function buildPageLink($targetPage, $cid = 0, $search = "", $searchType = "", $date1 = "", $date2 = "")
 {
+    global $cid, $search, $searchType, $date1, $date2;
     $link = "./productlist.php?page=" . $targetPage;
     if ($cid > 0)
         $link .= "&cid={$cid}";
@@ -355,7 +356,7 @@ function buildPageLink($targetPage, $cid = 0, $search = "", $searchType = "", $d
 
             <!-- Main Content -->
             <div id="content">
-                <?php include "../index/topBar.html"; ?>
+                <?php include "../index/topBar.php"; ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -424,7 +425,7 @@ function buildPageLink($targetPage, $cid = 0, $search = "", $searchType = "", $d
                             </div>
 
                             <div class="table-responsive">
-                                <table class="table table-bordered" width="100%" cellspacing="0">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
                                             <th>圖片</th>
@@ -635,7 +636,7 @@ function buildPageLink($targetPage, $cid = 0, $search = "", $searchType = "", $d
     <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script>
+<script>
         $(document).ready(function () {
             $('#dataTable').DataTable({
                 "paging": false,
@@ -643,8 +644,16 @@ function buildPageLink($targetPage, $cid = 0, $search = "", $searchType = "", $d
                 "info": false,
                 "ordering": true,
                 "columnDefs": [
-                    { "orderable": false, "targets": [0, 1, 2, 3, 4, 5, 8] } // 禁用這些欄位排序
-                ]
+                    { "orderable": false, "targets": [0, 1, 2, 3, 4, 5, 8] }, // 禁用這些欄位排序
+                    { "orderable": true, "targets": [6, 7] } // 只允許數量和價格排序
+                ],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Chinese-traditional.json"
+                },
+                "responsive": true,
+                "autoWidth": false,
+                "dom": 't', // 只顯示表格，不顯示其他控制項
+                "scrollX": true // 啟用水平滾動
             });
         });
     </script>

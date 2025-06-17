@@ -1,5 +1,11 @@
 <?php
 require_once "../connect.php";
+
+if(!isset($_SESSION["user"])){
+  header("location: /users/login.php");
+  exit;
+}
+
 $current_page = basename($_SERVER['PHP_SELF']);
 $values = [];
 
@@ -229,7 +235,7 @@ if (isset($_GET["member_level"]) && $_GET["member_level"] !== "") {
             <!-- Main Content -->
             <div id="content">
 
-                <?php include "../index/topBar.html"; ?>
+                <?php include "../index/topBar.php"; ?>
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 

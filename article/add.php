@@ -1,5 +1,10 @@
 <?php
 require_once "../connect.php";
+if(!isset($_SESSION["user"])){
+  header("location: /users/login.php");
+  exit;
+}
+
 $sql = "SELECT * FROM `article_category`";
 $errorMsg = "";
 try {
@@ -54,7 +59,7 @@ try {
             <!-- Main Content -->
             <div id="content">
 
-                <?php include "../index/topBar.html"; ?>
+                <?php include "../index/topBar.php"; ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -104,7 +109,7 @@ try {
                             </div>
                             <div class="d-flex mt-1 mb-3">
                                 <div class="btn btnAdd ms-auto btn-send ">送出</div>
-                                <a href="./index.php" class="btn btnAdd ms-2 me-5">取消</a>
+                                <a href="./articleList.php" class="btn btnAdd ms-2 me-5">取消</a>
                             </div>
                         </form>
                     </div>

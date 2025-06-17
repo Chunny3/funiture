@@ -1,6 +1,11 @@
 <?php
 require_once "../connect.php";
 
+if(!isset($_SESSION["user"])){
+  header("location: /users/login.php");
+  exit;
+}
+
 $sqlCate = "SELECT * FROM `products_category`";
 $sqlLv = "SELECT * FROM `member_levels`";
 $errorMsg = "";
@@ -77,7 +82,7 @@ try {
             <div id="content">
 
                 <!-- Topbar -->
-                <?php include "../index/topBar.html"; ?>
+                <?php include "../index/topBar.php"; ?>
 
                 <!-- End of Topbar -->
 

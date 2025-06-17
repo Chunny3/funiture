@@ -103,7 +103,7 @@ try {
             <div id="content">
 
                 <!-- Topbar -->
-                <?php include "../index/topBar.html"; ?>
+                <?php include "../index/topBar.php"; ?>
 
                 <!-- End of Topbar -->
 

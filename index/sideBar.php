@@ -13,8 +13,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <hr class="sidebar-divider my-0">
 
         <!-- Nav Item - 會員列表要改路徑 -->
-        <li class="nav-item <?= $current_page == 'index.html' ? 'active' : '' ?>" >
-            <a class="nav-link" href="index.html">
+        <li class="nav-item <?= $current_page == 'index.php' ? 'active' : '' ?>" >
+            <a class="nav-link" href="../users/index.php">
                 <i class="fa-solid fa-user"></i>
                 <span>會員資料列表</span></a>
         </li>
@@ -41,8 +41,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </li>
 
         <!-- Nav Item - Charts -->
-        <li class="nav-item <?= $current_page == 'index.php' ? 'active' : '' ?>">
-            <a class="nav-link" href="../article/index.php">
+        <li class="nav-item <?= $current_page == 'articleList.php' ? 'active' : '' ?>">
+            <a class="nav-link" href="../article/articleList.php">
                 <i class="fa-solid fa-newspaper"></i>
                 <span>文章管理</span></a>
         </li>

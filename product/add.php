@@ -1,6 +1,11 @@
 <?php
 require_once "../connect.php";
 
+if(!isset($_SESSION["user"])){
+  header("location: /users/login.php");
+  exit;
+}
+
 $sql = "SELECT * FROM `products`";
 $sqlCate = "SELECT * FROM `products_category`";
 $sqlSty = "SELECT * FROM `style`";
@@ -268,7 +273,7 @@ try {
 
                                     <div class="form-buttons">
                                         <button type="submit" class="btn btn-success">
-                                            <i class="fas fa-save"></i> 完成
+                                            <i class="fas fa-save mr-1"></i>儲存
                                         </button>
                                         <a href="./productlist.php" class="btn btn-secondary">
                                             <i class="fas fa-arrow-left"></i> 返回

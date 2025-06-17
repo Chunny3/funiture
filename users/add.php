@@ -1,6 +1,11 @@
 <?php
 require_once "../connect.php";
 require_once "./utilitiesUser.php";
+
+if(!isset($_SESSION["user"])){
+  header("location: /users/login.php");
+  exit;
+}
 ?>
 
 <!doctype html>
@@ -79,7 +84,7 @@ require_once "./utilitiesUser.php";
         <form action="./doAdd.php" method="post" enctype="multipart/form-data">
           <!-- 頭像上傳 -->
           <div class="mb-3 text-center position-relative">
-            <img id="imgPreview" src="../uploads/no-image.jpg" class="avatar-preview" alt="頭貼">
+            <img id="imgPreview" src="./uploads/no-image.jpg" class="avatar-preview" alt="頭貼">
             <label for="imgInput" class="avatar-edit" title="上傳/更換頭貼" style="cursor:pointer;">
               <!-- <i class="fa fa-camera"></i> -->
               <input type="file" id="imgInput" name="myFile" accept="image/*" style="display:none;">

@@ -2,6 +2,11 @@
 require_once "../connect.php";
 require_once "./utilitiesUser.php";
 
+if(!isset($_SESSION["user"])){
+  header("location: /users/login.php");
+  exit;
+}
+
 $perPage = 10;
 $page = intval($_GET["page"] ?? 1);
 $pageStart = ($page - 1) * $perPage;
@@ -92,7 +97,7 @@ $totalPage = ceil($totalCount / $perPage);
       <!-- Main Content -->
       <div id="content">
 
-        <?php include "../index/topBar.html"; ?>
+        <?php include "../index/topBar.php"; ?>
         <div class="container-fluid">
           <!-- Page Heading -->
           <div class="d-flex justify-content-between mb-1">
@@ -169,7 +174,7 @@ $totalPage = ceil($totalCount / $perPage);
                         <!-- 如果沒有上傳照片就顯示預設圖片 -->
                         <td>
                           <img class="rounded-circle"
-                            src="../uploads/<?= $row["img"] ? htmlspecialchars($row["img"]) : 'no-image.jpg' ?>" alt="照片"
+                            src="./uploads/<?= $row["img"] ? htmlspecialchars($row["img"]) : 'no-image.jpg' ?>" alt="照片"
                             style="width:40px; height:40px;">
                         </td>
                         <td><?= $row["name"] ?></td>

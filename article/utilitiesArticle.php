@@ -13,10 +13,10 @@ function alertGoBack($msg = "")
 
     echo "<script>
         alert('$msg');
-        window.location = './index.php';
+        window.location = './articleList.php';
      </script>";
 }
-function alertGoTo($msg = "", $url = "./index.php")
+function alertGoTo($msg = "", $url = "./articleList.php")
 {
     echo "<script>
     alert('$msg');
@@ -29,7 +29,7 @@ function timeoutGoBack($time = 1000)
 {
 
     echo "<script>
-        setTimeout(()=>window.location = './index.php',$time);
+        setTimeout(()=>window.location = './articleList.php',$time);
      </script>";
 }
 

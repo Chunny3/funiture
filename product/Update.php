@@ -333,7 +333,7 @@ try {
 
                                     <div class="form-buttons">
                                         <button type="submit" class="btn btn-success">
-                                            <i class="fas fa-save"></i> 完成編輯
+                                            <i class="fas fa-save "></i> 儲存
                                         </button>
                                         <a href="./productlist.php?page=<?= $_GET['page'] ?? 1 ?>" class="btn btn-secondary">
                                             <i class="fas fa-arrow-left"></i> 返回

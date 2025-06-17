@@ -1,17 +1,22 @@
 <?php
+session_start();
 require_once "../connect.php";
 require_once "./utilitiesArticle.php";
 header('Content-Type: application/json');
 
 
-
+$user_id = $_SESSION["user"]["id"] ?? null;
+if (!$user_id) {
+    // 未登入，導向登入頁或給錯誤
+    header("Location: login.php");
+    exit;
+}
 $id = $_POST["id"];
 $title = $_POST["title"];
 $content = $_POST["content"];
 preg_match_all('/<img[^>]+src=["\']uploads\/([^"\']+)["\']/i', $content, $matches);
 $imgFiles = $matches[1];
 $tags = array_filter(array_map('trim', explode(',', $_POST['tag']))); // 取得標籤並去除空白
-$user_id = 1; //這個跟users資料庫相連時要記得改掉
 $category = $_POST['category'];
 
 

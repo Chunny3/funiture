@@ -1,4 +1,9 @@
 <?php
+// 啟動 session
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 $servername = "localhost";
 $username = "admin";
 // $username = "root";

@@ -97,7 +97,7 @@ foreach ($rowsTag as $rowTag) {
             <!-- Main Content -->
             <div id="content">
 
-                <?php include "../index/topBar.html"; ?>
+                <?php include "../index/topBar.php"; ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -150,7 +150,7 @@ foreach ($rowsTag as $rowTag) {
                             </div>
                             <div class="d-flex mt-1 mb-3">
                                 <div class="btn btn-info ms-auto btn-send ">送出</div>
-                                <a href="./index.php" class="btn btn-info ms-2 me-5">取消</a>
+                                <a href="./articleList.php" class="btn btn-info ms-2 me-5">取消</a>
                             </div>
                         </form>
                     </div>

@@ -1,6 +1,12 @@
 <?php
 require_once "../connect.php";
 require_once "./utilitiesArticle.php";
+
+if(!isset($_SESSION["user"])){
+  header("location: /users/login.php");
+  exit;
+}
+
 $current_page = basename($_SERVER['PHP_SELF']);
 
 $cid = intval($_GET["cid"] ?? 0);
@@ -47,11 +53,11 @@ $order = $_GET["order"] ?? "desc";
 $sortBy = $_GET["sortBy"] ?? "";
 $order = strtolower($order) === "asc" ? "ASC" : "DESC";
 if ($sortBy === "") {
-    $sortSQL = "ORDER BY article.id ASC";
+    $sortSQL = "ORDER BY article.id DESC";
 } else if ($sortBy === "categoryName") {
     $sortSQL = "ORDER BY categoryName $order";
 } else {
-    $sortSQL = "ORDER BY article.id ASC";
+    $sortSQL = "ORDER BY article.id DESC";
 }
 
 
@@ -69,7 +75,8 @@ $sql = "SELECT
 article.*,
 MAX(article.created_date) AS created_date,
 GROUP_CONCAT(DISTINCT article_category.name) AS categoryName,
-GROUP_CONCAT(tag.name) AS tagName
+GROUP_CONCAT(tag.name) AS tagName,
+users.name AS userName
 FROM `article`
 LEFT JOIN `article_tag`
 ON `article`.`id` = `article_tag`.`article_id`
@@ -77,6 +84,8 @@ LEFT JOIN `tag`
 ON `tag`.`id` = `article_tag`.`tag_id`
 LEFT JOIN `article_category`
 ON `article`.`article_category_id` = `article_category`.`id`
+LEFT JOIN `users`
+ON article.user_id = users.id
 -- 改這下面
 $where
 GROUP BY `article`.`id`
@@ -155,7 +164,7 @@ $totalPage = ceil($length / $perPage);
             <!-- Main Content -->
             <div id="content">
 
-                <?php include "../index/topBar.html"; ?>
+                <?php include "../index/topBar.php"; ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -168,14 +177,14 @@ $totalPage = ceil($length / $perPage);
                                     class="fa-solid fa-plus"></i></a>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="d-flex align-items-center justify-content-between ">
 
-                        <a href="./index.php" class="btn btn-secondary btn-sm">清除篩選&nbsp;&nbsp;<i
-                                class="fa-solid fa-rotate"></i></a>
-
-                        <div class="d-flex align-items-center gap-3 flex-wrap">
+                        
+                        <div class="d-flex align-items-center gap-3 flex-wrap mb-3 ml-auto">
+                            <a href="./articleList.php" class="btn btn-secondary btn-sm ml-auto ">清除篩選&nbsp<i
+                                    class="fa-solid fa-rotate"></i></a>
                             <!-- 時間篩選區塊 -->
-                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <div class="d-flex align-items-center gap-2 flex-wrap ml-2">
                                 <span class="fw-bold">時間：</span>
                                 <input type="date" name="start_date" class="form-control form-control-sm w-auto"
                                     style="min-width: 140px;" value="<?= htmlspecialchars($start_date) ?>">
@@ -242,7 +251,7 @@ $totalPage = ceil($length / $perPage);
                                             <tr>
                                                 <td><?= $pageStart + $index + 1 ?></td>
                                                 <td><?= $row["title"] ?></td>
-                                                <td><?= $row["user_id"] ?></td>
+                                                <td><?= $row["userName"] ?></td>
                                                 <td><?= $row["categoryName"] ?></td>
                                                 <td><?= $row["tagName"] ?></td>
                                                 <td>
@@ -275,7 +284,7 @@ $totalPage = ceil($length / $perPage);
                                     <?php for ($i = 1; $i <= $totalPage; $i++): ?>
                                         <li class="page-item <?= $page == $i ? "active" : "" ?>">
                                             <?php
-                                            $link = "./index.php?page={$i}";
+                                            $link = "./articleList.php?page={$i}";
                                             if ($cid > 0)
                                                 $link .= "&cid={$cid}";
                                             // if ($searchType != "")

@@ -9,13 +9,16 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
+DROP table users;
+DROP table levels;
+
 -- 開始新增資料庫表單
--------------------------------------------建置 users 表單
+-- ----------------------------------------- 建置 users 表單
 
 CREATE TABLE `users`(
-`id`  INT PRIMARY KEY AUTO_INCREMENT,
+`id`  INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 `name` VARCHAR(30),
-`birthday` DATE DATE NOT NULL,
+`birthday` DATE NOT NULL,
 `email`  VARCHAR(30),
 `password`  VARCHAR(100),
 `phone`  VARCHAR(30),
@@ -26,25 +29,30 @@ CREATE TABLE `users`(
 `img` VARCHAR(30),
 `level_id`  INT,
 `created_at` DATE DEFAULT CURRENT_TIMESTAMP,
-`is_valid` TINYINT(1) DEFAULT 1
+`is_valid` TINYINT(1) DEFAULT 1,
+FOREIGN KEY (`level_id`) REFERENCES `levels`(`id`));
+
+DESC users
+
+SELECT * FROM users;
+
+
+
+CREATE TABLE `city_cates` (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100)
 );
 
-CREATE TABLE `city_cates`(
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100)
-);
-
-CREATE TABLE `area_cates`(
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  city_cate_id INT NOT NULL,
-  name VARCHAR(100)
+CREATE TABLE `area_cates` (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    city_cate_id INT NOT NULL,
+    name VARCHAR(100)
 );
 
 -- !!!可能有問題!!!
 CREATE TABLE `levels` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `name` VARCHAR(50) NOT NULL,
-  FOREIGN KEY (`level_id`) REFERENCES `levels`(`id`);
+    `id` INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `name` VARCHAR(50) NOT NULL
 );
 
 ----------------------------------------建置 products 表單
@@ -86,46 +94,46 @@ CREATE TABLE `style` (
 
 ---------------------------------------- 建置 coupons 表單
 CREATE TABLE coupons (
-  id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-  name VARCHAR(50) NOT NULL,
-  code VARCHAR(20) NOT NULL UNIQUE,
-  discount_type TINYINT(1) NOT NULL,
-  discount DECIMAL(7,2) NOT NULL,
-  min_discount INT DEFAULT 0,
-  max_amount INT DEFAULT NULL,
-  start_at DATE DEFAULT NULL,
-  end_at DATE DEFAULT NULL,
-  valid_days INT DEFAULT NULL,
-  is_valid TINYINT(1) DEFAULT 1 NOT NULL,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
+    id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    code VARCHAR(20) NOT NULL UNIQUE,
+    discount_type TINYINT(1) NOT NULL,
+    discount DECIMAL(7, 2) NOT NULL,
+    min_discount INT DEFAULT 0,
+    max_amount INT DEFAULT NULL,
+    start_at DATE DEFAULT NULL,
+    end_at DATE DEFAULT NULL,
+    valid_days INT DEFAULT NULL,
+    is_valid TINYINT(1) DEFAULT 1 NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE coupon_categories (
-  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-  coupon_id INT NOT NULL,
-  category_id INT NOT NULL,
-  FOREIGN KEY (coupon_id) REFERENCES coupons(id),
-  FOREIGN KEY (category_id) REFERENCES products_category(category_id)
+    id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    coupon_id INT NOT NULL,
+    category_id INT NOT NULL,
+    FOREIGN KEY (coupon_id) REFERENCES coupons (id),
+    FOREIGN KEY (category_id) REFERENCES products_category (category_id)
 );
 
 CREATE TABLE coupon_levels (
-  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-  coupon_id INT NOT NULL,
-  level_id INT NOT NULL,
-  FOREIGN KEY (coupon_id) REFERENCES coupons(id),
-  FOREIGN KEY (level_id) REFERENCES member_levels(id)
+    id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    coupon_id INT NOT NULL,
+    level_id INT NOT NULL,
+    FOREIGN KEY (coupon_id) REFERENCES coupons (id),
+    FOREIGN KEY (level_id) REFERENCES member_levels (id)
 );
 
 CREATE TABLE user_coupons (
-  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-  user_id INT NOT NULL,
-  coupon_id INT NOT NULL,
-  get_at DATETIME,
-  used_at DATETIME,
-  expire_at DATETIME,
-  status TINYINT(1) DEFAULT 0,
-  FOREIGN KEY (user_id) REFERENCES users(id),
-  FOREIGN KEY (coupon_id) REFERENCES coupons(id)
+    id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    user_id INT NOT NULL,
+    coupon_id INT NOT NULL,
+    get_at DATETIME,
+    used_at DATETIME,
+    expire_at DATETIME,
+    status TINYINT(1) DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (coupon_id) REFERENCES coupons (id)
 );
 
 -----------------------------------------建置 article 表單
@@ -136,8 +144,8 @@ CREATE TABLE article (
     content longtext,
     article_category_id INT NOT NULL,
     created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    upload_at DATETIME ,
-    published_date DATETIME ,
+    upload_at DATETIME,
+    published_date DATETIME,
     is_valid TINYINT NOT NULL DEFAULT 1,
     FOREIGN KEY (`article_category_id`) REFERENCES article_category (`id`)
 );

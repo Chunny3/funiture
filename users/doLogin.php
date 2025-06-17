@@ -41,7 +41,10 @@ if(!$row){
       "email"=> $row["email"],
       "img" => $row["img"]
     ];
-    alertGoTo("登入成功", "./index.php");
+    
+    // 使用 PHP header 重導向，確保 session 已經設定
+    header("location: ./index.php");
+    exit;
   }else{
     alertAndBack("登入失敗");
   }
