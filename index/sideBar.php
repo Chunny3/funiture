@@ -6,7 +6,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
         <!-- Sidebar - Brand -->
         <a class="d-flex justify-content-center my-5" href="index.php">
-            <img src="../img/Oakly-logo.png" alt="Oakly" class="logo">
+            <img src="../index/img/Oakly-logo.png" alt="Oakly" class="logo">
         </a>
 
         <!-- Divider -->

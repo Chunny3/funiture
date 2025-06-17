@@ -1,7 +1,7 @@
 <?php
 // 刪除會員主要程式
 require_once "../connect.php";
-require_once "./Utilities.php";
+require_once "./utilitiesProduct.php";
 
 if(!isset($_GET["id"])){
   alertGoTo("請從正常管道進入", "./productlist.php");

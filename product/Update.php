@@ -1,6 +1,6 @@
 <?php
 require_once "../connect.php";
-require_once "./Utilities.php";
+require_once "./utilitiesProduct.php";
 
 if (!isset($_GET["id"])) {
     echo "請從正常管道進入";

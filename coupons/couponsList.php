@@ -307,7 +307,7 @@ if (isset($_GET["member_level"]) && $_GET["member_level"] !== "") {
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered text-center" id="dataTable" width="100%"
+                                <table class="table table-bordered text-center" width="100%"
                                     cellspacing="0">
                                     <colgroup>
                                         <col class="col-1">
@@ -579,14 +579,14 @@ if (isset($_GET["member_level"]) && $_GET["member_level"] !== "") {
 
 
     <!-- Bootstrap core JavaScript-->
-    <script src="../svendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
+    <script src="../js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
     <script src="../vendor/datatables/jquery.dataTables.min.js"></script>

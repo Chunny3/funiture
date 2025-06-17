@@ -1,6 +1,6 @@
 <?php
 require_once "../connect.php";
-require_once "../Utilities.php";
+require_once "./utilitiesArticle.php";
 
 $id = $_GET["id"];
 

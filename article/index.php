@@ -1,6 +1,6 @@
 <?php
 require_once "../connect.php";
-require_once "../utilities.php";
+require_once "./utilitiesArticle.php";
 $current_page = basename($_SERVER['PHP_SELF']);
 
 $cid = intval($_GET["cid"] ?? 0);
@@ -47,7 +47,7 @@ $order = $_GET["order"] ?? "desc";
 $sortBy = $_GET["sortBy"] ?? "";
 $order = strtolower($order) === "asc" ? "ASC" : "DESC";
 if ($sortBy === "") {
-    $sortSQL = "ORDER BY article.id DESC";
+    $sortSQL = "ORDER BY article.id ASC";
 } else if ($sortBy === "categoryName") {
     $sortSQL = "ORDER BY categoryName $order";
 } else {
@@ -87,13 +87,6 @@ LIMIT $perPage OFFSET $pageStart";
 
 try {
 
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute($values);
-    // $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // $stmtAll = $pdo->prepare($sqlAll);
-    // $stmtAll->execute($values);
-    // $length = $stmtAll->fetchColumn();
     $stmt = $pdo->prepare($sql);
     foreach ($values as $key => $val) {
         $stmt->bindValue(":" . $key, $val);
@@ -142,7 +135,7 @@ $totalPage = ceil($length / $perPage);
     <!-- Custom styles for this page -->
     <link href="../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
-    <link href="../css/article.css" rel="stylesheet">
+    <link href="./css/article.css" rel="stylesheet">
     <link href="../css/mycss.css" rel="stylesheet">
 
 
@@ -216,7 +209,7 @@ $totalPage = ceil($length / $perPage);
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered text-center" id="dataTable" width="100%"
+                                <table class="table table-bordered text-center"  width="100%"
                                     cellspacing="0">
                                     <colgroup>
                                         <col class="col-1">
@@ -342,8 +335,8 @@ $totalPage = ceil($length / $perPage);
     <!-- Page level plugins -->
     <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
-    <script src="js/demo/datatables-demo.js"></script>
-    <script src="../js/index.js"></script>
+    <script src="../js/demo/datatables-demo.js"></script>
+    <script src="./js/index.js"></script>
 
 
 </body>

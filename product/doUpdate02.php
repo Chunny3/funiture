@@ -1,7 +1,7 @@
 <?php
 
 require_once "../connect.php";
-require_once "./Utilities.php";
+require_once "./utilitiesProduct.php";
 
 if(!isset($_POST["msgID"]) ){
   echo "不要再從網址使用 do 系列的檔案了, 罷脫";

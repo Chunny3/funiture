@@ -303,7 +303,7 @@ try {
     <script src="../js/demo/datatables-demo.js"></script>
 
     <!-- 我的JS -->
-    <script src="js/couponForm.js"></script>
+    <script src="./js/couponForm.js"></script>
 
 
 </body>

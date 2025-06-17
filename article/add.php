@@ -34,7 +34,7 @@ try {
         referrerpolicy="no-referrer" />
 
     <link href="../css/sb-admin-2.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="./css/article.css">
     <link rel="stylesheet" href="../css/mycss.css">
 
 
@@ -140,7 +140,7 @@ try {
 
     <!-- Custom scripts for all pages-->
     <script src="../js/sb-admin-2.min.js"></script>
-    <script src="../js/articleAdd.js"></script>
+    <script src="./js/articleAdd.js"></script>
 
 </body>
 
