@@ -11,7 +11,11 @@ if(!isset($_POST["category"])){
   alertAndBack("請填寫分類");
   exit;
 }
-if(!isset($_FILES["myFile"])){
+if(!isset($_POST["style"])){
+  alertAndBack("請填寫風格");
+  exit;
+}
+if (!isset($_FILES["myFile"]) || empty($_FILES["myFile"]["name"][0])) {
   alertAndBack("沒有選擇圖片");
   exit;
 }

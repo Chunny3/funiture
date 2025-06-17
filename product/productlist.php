@@ -58,12 +58,14 @@ $pageStart = ($page - 1) * $perPage;
 $sql = "SELECT p.*, c.category_name 
         FROM `products` p
         LEFT JOIN `products_category` c ON p.category_id = c.category_id
-        WHERE $cateSQL $searchSQL $dateSQL $deleteSQL LIMIT $perPage OFFSET $pageStart";
+        WHERE $cateSQL $searchSQL $dateSQL $deleteSQL  ORDER BY p.create_at DESC 
+        LIMIT $perPage OFFSET $pageStart";;
 
 $sqlAll = "SELECT p.*, c.category_name 
            FROM `products` p
            LEFT JOIN `products_category` c ON p.category_id = c.category_id
-           WHERE $cateSQL $searchSQL $dateSQL $deleteSQL";
+           WHERE $cateSQL $searchSQL $dateSQL $deleteSQL
+           ORDER BY p.create_at DESC";;
 
 $sqlCate = "SELECT * FROM `products_category`";
 
@@ -91,6 +93,20 @@ $totalPage = ceil($msgLength / $perPage);
 $startItem = $msgLength > 0 ? min(($page - 1) * $perPage + 1, $msgLength) : 0;
 $endItem = min($page * $perPage, $msgLength);
 // 改結束
+function buildPageLink($targetPage, $cid = 0, $search = "", $searchType = "", $date1 = "", $date2 = "")
+{
+    $link = "./productlist.php?page=" . $targetPage;
+    if ($cid > 0)
+        $link .= "&cid={$cid}";
+    if (!empty($searchType))
+        $link .= "&search={$search}&qType={$searchType}";
+    if (!empty($date1))
+        $link .= "&date1={$date1}";
+    if (!empty($date2))
+        $link .= "&date2={$date2}";
+    return $link;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -323,7 +339,7 @@ $endItem = min($page * $perPage, $msgLength);
         .table td:nth-child(9) {
             width: 9%;
         }
-    </style> 
+    </style>
 </head>
 
 <body id="page-top">
@@ -454,9 +470,9 @@ $endItem = min($page * $perPage, $msgLength);
                                                 <td>
                                                     <div class="btn-group-horizontal ">
                                                         <button id="btnDel" class="btn btn-sm btn-primary"
-                                                            data-id="<?= $row["id"] ?>"><i
-                                                                class="fa-solid fa-trash"></i></button>
-                                                        <a href="./Update.php?id=<?= $row["id"] ?>"
+                                                            data-id="<?= $row["id"] ?>">
+                                                            <i class="fa-solid fa-trash"></i></button>
+                                                        <a href="./Update.php?id=<?= $row["id"] ?>&page=<?= $page ?>"
                                                             class="btn btn-sm btn-primary"><i
                                                                 class="fa-solid fa-pen"></i></a>
                                                     </div>
@@ -468,18 +484,26 @@ $endItem = min($page * $perPage, $msgLength);
                             </div>
 
                             <!-- Pagination -->
-                                  <!-- 改-->
+                            <!-- 改-->
                             <div class="mb-2" style="text-align: right;">
-                            第 <?= $startItem ?> 筆到第 <?= $endItem ?> 筆，共 <?= $msgLength ?> 筆資料
+                                第 <?= $startItem ?> 筆到第 <?= $endItem ?> 筆，共 <?= $msgLength ?> 筆資料
                             </div>
                             <!-- 改結束-->
                             <div class="d-flex justify-content-between align-items-center ">
                                 <nav aria-label="Page navigation" class="flex-grow-1">
                                     <ul class="pagination justify-content-center mb-0">
+                                        <?php if ($page > 1): ?>
+                                            <li class="page-item">
+                                                <a class="page-link" href="<?= buildPageLink(1, $cid, $search, $searchType, $date1, $date2) ?>">首頁</a>
+                                            </li>
+                                        <?php endif; ?>
+
                                         <?php
                                         $maxVisiblePages = 5; // 最多顯示的分頁按鈕數量
                                         $startPage = max(1, $page - floor($maxVisiblePages / 2));
                                         $endPage = min($totalPage, $startPage + $maxVisiblePages - 1);
+
+
 
                                         // 上一頁按鈕
                                         if ($page > 1): ?>
@@ -495,7 +519,9 @@ $endItem = min($page * $perPage, $msgLength);
                                                 if ($date2 != "")
                                                     $prevLink .= "&date2={$date2}";
                                                 ?>
-                                                <a class="page-link" href="<?= $prevLink ?>">上一頁</a>
+                                                <a class="page-link" href="<?= $prevLink ?>">
+                                                    <i class="fa-solid fa-arrow-left"></i>
+                                                </a>
                                             </li>
                                         <?php endif; ?>
 
@@ -512,7 +538,8 @@ $endItem = min($page * $perPage, $msgLength);
                                                 if ($date2 != "")
                                                     $link .= "&date2={$date2}";
                                                 ?>
-                                                <a class="page-link" href="<?= $link ?>"><?= $i ?></a>
+                                                <a class="page-link" href="<?= $link ?>"><?= $i ?>
+                                            </a>
                                             </li>
                                         <?php endfor; ?>
 
@@ -530,7 +557,13 @@ $endItem = min($page * $perPage, $msgLength);
                                                 if ($date2 != "")
                                                     $nextLink .= "&date2={$date2}";
                                                 ?>
-                                                <a class="page-link" href="<?= $nextLink ?>">下一頁</a>
+                                                <a class="page-link" href="<?= $nextLink ?>"><i class="fa-solid fa-arrow-right"></i></a>
+                                            </li>
+                                        <?php endif; ?>
+
+                                        <?php if ($page < $totalPage): ?>
+                                            <li class="page-item">
+                                                <a class="page-link" href="<?= buildPageLink($totalPage, $cid, $search, $searchType, $date1, $date2) ?>">末頁</a>
                                             </li>
                                         <?php endif; ?>
                                     </ul>
@@ -605,10 +638,13 @@ $endItem = min($page * $perPage, $msgLength);
     <script>
         $(document).ready(function () {
             $('#dataTable').DataTable({
-                "paging": false,  // 禁用 DataTables 的分页
-                "searching": false,  // 禁用搜索
-                "info": false,  // 禁用信息显示
-                "ordering": true  // 保持排序功能
+                "paging": false,
+                "searching": false,
+                "info": false,
+                "ordering": true,
+                "columnDefs": [
+                    { "orderable": false, "targets": [0, 1, 2, 3, 4, 5, 8] } // 禁用這些欄位排序
+                ]
             });
         });
     </script>

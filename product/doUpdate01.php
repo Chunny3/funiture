@@ -144,13 +144,13 @@ if(isset($_FILES["additionalImages"]) && is_array($_FILES["additionalImages"]["n
 }
 
 // 計算商品在列表中的位置
-$sql = "SELECT COUNT(*) as position FROM products WHERE id <= ?";
+$sql = "SELECT COUNT(*) as position FROM products WHERE create_at >= (SELECT create_at FROM products WHERE id = ?) AND is_valid = 1";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$id]);
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 $position = $result['position'];
-$page = ceil($position / 10); // 假設每頁顯示10筆資料
+$page = intval($_POST["page"] ?? 1);
 
-alertGoTo("更新資料成功", "./productlist.php?page=" . $page);
+alertGoTo("更新資料成功", "./productlist.php?page=" . $page . "&id=" . $id);
 
 

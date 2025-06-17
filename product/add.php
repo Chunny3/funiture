@@ -212,12 +212,14 @@ try {
                                 <form action="./doInsert.php" method="post" enctype="multipart/form-data">
                                     <div class="content-area">
                                         <div class="inputs border rounded p-3 mb-3">
+                                            <div class="preview-container" id="imagePreview"></div>
                                             <div class="input-group">
+                                                
                                                 <span class="input-group-text">商品圖片</span>
                                                 <input class="form-control" type="file" name="myFile[]"
                                                     accept=".png,.jpg,.jpeg" onchange="previewImages(this)">
                                             </div>
-                                            <div class="preview-container" id="imagePreview"></div>
+                                           
                                             <div class="input-group">
                                                 <span class="input-group-text">名稱</span>
                                                 <input name="name[]" type="text" class="form-control" placeholder="請輸入商品名稱">

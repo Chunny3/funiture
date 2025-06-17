@@ -275,6 +275,7 @@ try {
                             <div class="card-body">
                                 <form method="post" action="./doUpdate01.php" enctype="multipart/form-data">
                                     <input type="hidden" name="msgID" value="<?= $id ?>">
+                                    <input type="hidden" name="page" value="<?= $_GET['page'] ?? 1 ?>">
                                     <input type="file" id="singleFileInput" name="imgFile" accept=".png,.jpg,.jpeg"
                                         style="display: none;" onchange="previewImage(event)">
                                     <img id="preview" src="#" alt="預覽圖片"
@@ -334,7 +335,7 @@ try {
                                         <button type="submit" class="btn btn-success">
                                             <i class="fas fa-save"></i> 完成編輯
                                         </button>
-                                        <a href="./productlist.php" class="btn btn-secondary">
+                                        <a href="./productlist.php?page=<?= $_GET['page'] ?? 1 ?>" class="btn btn-secondary">
                                             <i class="fas fa-arrow-left"></i> 返回
                                         </a>
                                     </div>
